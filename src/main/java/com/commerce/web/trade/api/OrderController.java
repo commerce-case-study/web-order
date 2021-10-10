@@ -60,14 +60,6 @@ public class OrderController {
         return "ORD"+System.currentTimeMillis();
     }
     
-    /**
-     * Generate Payment Code
-     * @return
-     */
-    private String generatePaymentCode() {
-        return "PYM"+System.currentTimeMillis();
-    }
-    
     private DeliveryDto getDelivery(String courier, String serviceType, MemberAddressDto sender, MemberAddressDto receiver) {
         return DeliveryDto.builder()
                 .courierName(courier)
@@ -175,32 +167,6 @@ public class OrderController {
         
         Map<String, String> maps = new HashMap<String, String>();
         maps.put("order_code"    , order.getOrderCode());
-        
-        // Show the response
-        return new ResponseEntity<String>(
-                JsonConverterUtil.convertObjectToJson(maps), 
-                HttpStatus.OK);
-    }
-    
-    @NeedLogin
-    @PostMapping(value = "/payment", consumes = "application/json")
-    public ResponseEntity<String> createOrder(MemberDetail memberDetail, @RequestBody RequestPaymentDto requestPayment) {
-        
-        // 1. Find Order Data
-        OrderDto orderDto = tradeService.findOrderByOrderCode(requestPayment.getOrderCode());
-
-        // 4. Create Order Payment
-        OrderPaymentDto orderPayment = OrderPaymentDto.builder()
-                .orderId(orderDto.getId())
-                .paymentCode(generatePaymentCode())
-                .status(PaymentStatus.CREATED.toString())
-                .amount(orderDto.getTotalPayment())
-                .build();
-        tradeService.createOrderPayment(orderPayment);
-        
-        Map<String, String> maps = new HashMap<String, String>();
-        maps.put("payment_code"  , orderPayment.getPaymentCode());
-        maps.put("payment_url"   , "https://please-pay-your-order.here/payment/"+orderPayment.getPaymentCode());
         
         // Show the response
         return new ResponseEntity<String>(

@@ -12,7 +12,7 @@ import com.commerce.web.trade.dto.OrderItemDto;
 import com.commerce.web.trade.dto.OrderPaymentDto;
 import com.commerce.web.trade.dto.ShopDto;
 
-@FeignClient(name = MemberService.SERVICE_NAME)
+@FeignClient(name = TradeService.SERVICE_NAME)
 public interface TradeService {
 
     public static final String SERVICE_NAME = "service-trade";
@@ -34,4 +34,11 @@ public interface TradeService {
     
     @GetMapping(value = "findOrderByOrderCode/{orderCode}", produces = "application/json")
     public OrderDto findOrderByOrderCode(@PathVariable("orderCode") String orderCode);
+    
+    @GetMapping(value = "findOrderPaymentByPaymentCode/{paymentCode}", produces = "application/json")
+    public OrderPaymentDto findOrderPaymentByPaymentCode(@PathVariable("paymentCode") String paymentCode);
+
+    @GetMapping(value = "updateOrderPaymentStatus/{paymentCode}/{status}", produces = "application/json")
+    public Boolean updateOrderPaymentStatus(@PathVariable("paymentCode") String paymentCode, @PathVariable("status") String status);
+
 }

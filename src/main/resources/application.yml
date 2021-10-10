@@ -1,4 +1,4 @@
 # Spring Application
 spring:
   application:
-    name: web-member
+    name: web-order
